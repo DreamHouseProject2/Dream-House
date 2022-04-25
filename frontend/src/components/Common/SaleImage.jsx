@@ -1,11 +1,12 @@
-import React from 'react'
-import ImageBackgroundSale from '../../assets/img/background-sell.png'
+import React from 'react';
+import ImageBackgroundSale from '../../assets/img/backkground-sell.png';
+
 function SaleImage() {
-  return (
-    <div>
-    <img src={ImageBackgroundSale} alt="" className="background" />
-    </div>
-  )
+    return (
+        <>
+            <img class="background" src={ImageBackgroundSale} alt="" />
+        </>
+    );
 }
 
-export default SaleImage
+export default SaleImage;

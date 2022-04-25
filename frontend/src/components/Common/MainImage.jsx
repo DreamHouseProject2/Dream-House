@@ -1,19 +1,21 @@
-import React,{useState} from 'react';
-import ImageBackgroundMain from '../../assets/img/background-main.png'
+import React, { useState } from 'react';
+import ImageBackgroundMain from '../../assets/img/background-main.png';
 import ImgSearchIcon from '../../assets/img/icon-search.svg';
-import {push }  from 'connected-react-router';
 import { useDispatch } from 'react-redux';
+import { push } from 'connected-react-router';
 
-function MainImage(){
+function MainImage() {
     const dispatch = useDispatch();
     const [search, setSearch] = useState();
-    const inputFind = event =>{
+
+    const inputFind = event => {
         setSearch(event.target.value);
     };
-    const submitAction  = search =>{
-        dispatch(push('search/?search='+search));
+
+    const submitAction = search => {
+        dispatch(push('/search/?search=' + search));
     };
-    return(
+    return (
         <>
             <section class="main">
                 <img class="background" src={ImageBackgroundMain} alt="" />
@@ -31,6 +33,7 @@ function MainImage(){
                 </article>
             </section>
         </>
-    )
+    );
 }
+
 export default MainImage;

@@ -1,86 +1,65 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Loading from '../assets/img/loading.gif';
-import postImage from '../assets/img/newspaper-icon-png.jpg';
-import PostForm from '../components/Posts/PostForm';
-import Post from '../components/Posts/Post';
-import { fetchPosts } from '../reducks/posts/operations';
-import { getPosts } from '../reducks/posts/selectors';
+import { fetchHomes, clearHomes } from '../reducks/homes/operations';
+import { getHomes } from '../reducks/homes/selectors';
+import MainImage from '../components/Common/MainImage';
+import { getTags } from '../reducks/tags/selectors';
+import { fetchTags } from '../reducks/tags/operations';
+import CategoryCard from '../components/Common/CategoryCard';
+import { useHistory } from 'react-router';
 
 const Home = () => {
     const dispatch = useDispatch();
     const selector = useSelector(state => state);
-    const posts = getPosts(selector);
-    let [page, setPage] = useState(1);
-    const [isLoading, setIsLoading] = useState(false);
+    const homes = getHomes(selector);
+    const history = useHistory();
+    useEffect(() => {
+        dispatch(clearHomes());
+        dispatch(fetchHomes());
+    }, []);
+    const tags = getTags(selector);
+    const clickHome = homeId => {
+        dispatch(history.push(`/preview/${homeId}/`));
+    };
 
     useEffect(() => {
-        dispatch(fetchPosts({ page }));
-        // eslint-disable-next-line
+        dispatch(fetchTags());
     }, []);
 
-    // Infinite Scroll Pagination Flow
-    const observer = useRef();
-
-    // Reference to a very last post element
-    const lastPostElement = useCallback(
-        node => {
-            if (isLoading) return;
-            // Disconnect reference from previous element, so that new last element is hook up correctly
-            if (observer.current) {
-                observer.current.disconnect();
-            }
-
-            // Observe changes in the intersection of target element
-            observer.current = new IntersectionObserver(async entries => {
-                // That means that we are on the page somewhere, In our case last element of the page
-                if (entries[0].isIntersecting && posts.next) {
-                    // Proceed fetch new page
-                    setIsLoading(true);
-                    setPage(++page);
-                    await dispatch(fetchPosts({ page }));
-                    setIsLoading(false);
-                }
-            });
-
-            // Reconnect back with the new last post element
-            if (node) {
-                observer.current.observe(node);
-            }
-        },
-        // eslint-disable-next-line
-        [posts.next]
-    );
-
     return (
-        <section className="content">
-            <PostForm />
-            <section className="posts">
-                {posts.results.length > 0 ? (
-                    <ul>
-                        {posts.results.map((post, index) => {
-                            return (
-                                <Post
-                                    ref={index === posts.results.length - 1 ? lastPostElement : null}
-                                    key={post.id}
-                                    post={post}
-                                />
-                            );
-                        })}
-                    </ul>
-                ) : (
-                    <div className="no-post">
-                        <img width="72" src={postImage} alt="icon" />
-                        <p>No posts here yet...</p>
-                    </div>
-                )}
-                {isLoading && (
-                    <div className="loading">
-                        <img src={Loading} className="" alt="" />
-                    </div>
-                )}
+        <>
+            <MainImage />
+            <section class="option">
+                <h4>
+                    Whether you're buying, selling or renting, <br />
+                    we can help you move forward.
+                </h4>
+                <ul class="icons">{tags && tags.map(tag => <CategoryCard tag={tag} />)}</ul>
             </section>
-        </section>
+            <section class="explore">
+                <div>
+                    <h4>Explore homes on Dream House</h4>
+                </div>
+                <div class="images">
+                    <ul class="column">
+                        <ul class="rows">
+                            {homes &&
+                                homes.map(home => (
+                                    <li class="single" key={home.id}>
+                                        <img src={'https://res.cloudinary.com/dwzjr9dg5/' + home.main_image} alt="" />
+                                        <div class="box-main">
+                                            <h1>{home.address}</h1>
+                                        </div>
+                                        <button id="vh" onClick={() => clickHome(home.id)}>
+                                            View more
+                                        </button>
+                                    </li>
+                                ))}
+                        </ul>
+                    </ul>
+                </div>
+            </section>
+        </>
     );
 };
 

@@ -1,10 +1,15 @@
 const initialState = {
-    posts: {
-        results: [],
-        count: 0,
-        next: null,
-        previous: null
-    }
+    homes: {
+        list: [],
+        hasNext: true
+    },
+    favourites: {
+        list: []
+    },
+    tags: {
+        list: []
+    },
+    user: {}
 };
 
 export default initialState;

@@ -1,35 +1,37 @@
-import React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import ImgUseIcon from '../../assets/img/icon-user.svg';
-import { useDispatch,useSelector } from 'react-redux';
-import {signOut} from '../../reducks/users/operations';
-import {push} from 'connected-react-router';
-import {getTags} from '../../reducks/tags/selectors';
-import {fetchTags} from '../../reducks/tags/operations';
+import { useDispatch, useSelector } from 'react-redux';
+import { signOut } from '../../reducks/users/operations';
+import { push } from 'connected-react-router';
+import { getTags } from '../../reducks/tags/selectors';
+import { fetchTags } from '../../reducks/tags/operations';
 
-function Option({setShowOption}){
+function Option({ setShowOption }) {
     const dispatch = useDispatch();
     const key = localStorage.getItem('HOME_LOGIN_USER_KEY');
-    const [checkUser,setCheckUser] = useState(false);
+    const [checkUser, setCheckUser] = useState(false);
     const user = JSON.parse(localStorage.getItem('HOME_LOGIN_USER_KEY'));
-    const selector = useSelector(state=>state);
-    const tags = getTags (selector);
+    const selector = useSelector(state => state);
+    const tags = getTags(selector);
 
-    console.log('Tags',tags)
-    const signOutButton = ()=>{
+    console.log('Tags', tags);
+    const signOutButton = () => {
         dispatch(signOut());
         setCheckUser(false);
     };
-    useEffect(()=>{
-        if(key!=null){
-            setCheckUser(true)
+
+    useEffect(() => {
+        if (key != null) {
+            setCheckUser(true);
         }
-    },[key]);
-    useEffect(()=>{
+    }, [key]);
+
+    useEffect(() => {
         dispatch(fetchTags());
-    },[])
-    return(
+    }, []);
+    return (
         <>
-        <div class="main2" onClick={() => setShowOption(false)}>
+            <div class="main2" onClick={() => setShowOption(false)}>
                 <div class="options">
                     <ul>
                         <li class="first">
@@ -54,13 +56,16 @@ function Option({setShowOption}){
                                   }
                               })
                             : ''}
+
                         <li onClick={signOutButton}>
                             {' '}
                             <a href="/">Log Out</a>
                         </li>
                     </ul>
                 </div>
-            </div></>
-    )
+            </div>
+        </>
+    );
 }
-export default Option
+
+export default Option;

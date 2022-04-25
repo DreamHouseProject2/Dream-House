@@ -1,30 +1,30 @@
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from 'react';
 import API from '../../API';
 import ImgIconBack from '../../assets/img/icon-back.svg';
-import { useDispatch } from "react-redux";
-import {useParams} from 'react-router';
-import {push} from 'connected-react-router';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router';
+import { push } from 'connected-react-router';
 
 const api = new API();
-function Preview(){
-    const {id} = useParams();
-    const[home,setHome]=useState(null);
+
+function Preview() {
+    const { id } = useParams();
+    const [home, setHome] = useState(null);
     const dispatch = useDispatch();
-    useEffect(()=>{
+    useEffect(() => {
         api.getHome(id)
-        .then(home=>{
-            setHome(home);
+            .then(home => {
+                setHome(home);
+            })
+            .catch(error => {
+                alert('Faild to connect API: /house/:id/');
+            });
+    }, []);
 
-        })
-        .catch(error=>{
-            alert('failed to connect PI:/house?:id');
-        })
-    },[]);
-    const clickback  = ()=>{
-        dispatch(push('/'))
+    const clickback = () => {
+        dispatch(push('/'));
     };
-
-    return(
+    return (
         <div>
             <section class="preview">
                 <div class="title" onClick={clickback}>
@@ -87,6 +87,7 @@ function Preview(){
                 )}
             </section>
         </div>
-    )
+    );
 }
+
 export default Preview;
